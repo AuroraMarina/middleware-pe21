@@ -87,3 +87,37 @@ Se verificó que el proyecto TypeScript compila correctamente y cumple con los r
 
 ```
 ```
+
+# Testing
+
+## Ejecutar las pruebas
+
+```bash
+npm test
+```
+
+## Resultado obtenido
+
+```text
+PASS  src/middlewares/logger.test.ts
+PASS  src/middlewares/auth.test.ts
+
+Test Suites: 2 passed, 2 total
+Tests:       5 passed, 5 total
+Snapshots:   0 total
+Time:        0.891 s
+Ran all test suites.
+```
+
+### Casos probados
+
+#### Middleware Logger
+
+* Verifica que se invoque `next()`.
+* Verifica que registre correctamente el método y la ruta de la petición.
+
+#### Middleware API Key
+
+* Header `x-api-key` ausente → respuesta HTTP 401.
+* API Key incorrecta → respuesta HTTP 401.
+* API Key válida (`secreto-demo`) → invoca `next()` sin generar respuesta.
