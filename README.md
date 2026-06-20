@@ -1,123 +1,105 @@
-# PE-2.1 Configuración y primer servicio middleware con Node.js
+# ACTIVIDAD PE-2.1
 
-## Escenario (a) - Sin API Key
-
-### Comando
-
-```bash
+## Actividad 1
+El escenario tiene este comando:
 curl http://localhost:3000/health
-```
 
-### Salida
+Y la salida es:
 
-```json
 {"error":"API key inválida o ausente"}
-```
 
-### Explicación
+Justificación:
+El middleware de autenticación detecta que no se envió y responde con error 401.
 
-La petición fue rechazada por el middleware de autenticación porque no se envió la cabecera `x-api-key`. El servidor respondió con un error 401 (Unauthorized).
+## Actividad 2
+El escenario tiene este comando:
 
----
+curl -H "x-api-key: secreto-demo" http://localhost:3000/health
 
-## Escenario (b) - Con API Key válida
+Y la salida es:
 
-### Comando
+{"status":"ok","ts":"2026-06-11T20:47:08.694Z"}
 
-```bash
-curl.exe -H "x-api-key: secreto-demo" http://localhost:3000/health
-```
+Justificación:
 
-### Salida
+La API key salió válida, por lo que el middleware permite que se de el acceso y la ruta /health esta bien.
 
-```json
-{"status":"ok","ts":"2026-06-11T19:16:53.463Z"}
-```
+## Actividad 3
+El escenario tiene este comando:
 
-### Explicación
+curl -H "x-api-key: secreto-demo" http://localhost:3000/noexiste
 
-La API Key enviada es válida, por lo que el middleware permitió el acceso a la ruta `/health`. El servidor respondió correctamente con estado 200 (OK).
+Y la salida es:
 
----
+Cannot GET /noexiste
 
-## Escenario (c) - Ruta inexistente
+Justificación:
+La ruta no existe en la aplicación, entonces Express responde con error 404.
 
-### Comando
 
-```bash
-curl.exe -H "x-api-key: secreto-demo" http://localhost:3000/noexiste
-```
 
-### Salida
+# ACTIVIDAD TA-2.1
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<title>Error</title>
-</head>
-<body>
-<pre>Cannot GET /noexiste</pre>
-</body>
-</html>
-```
+Para esta actividad se ejecutaron la spruebas unitarias con el comando:
 
-### Explicación
-
-La autenticación fue exitosa, pero la ruta solicitada no existe en la aplicación. Express devolvió un error 404 (Not Found).
-
----
-
-## Verificación de compilación
-
-### Comando
-
-```bash
-npx tsc --noEmit
-```
-
-### Resultado
-
-La compilación finalizó sin errores.
-
-### Explicación
-
-Se verificó que el proyecto TypeScript compila correctamente y cumple con los requisitos de la práctica.
-
-```
-```
-
-# Testing
-
-## Ejecutar las pruebas
-
-```bash
 npm test
-```
 
-## Resultado obtenido
+Lo que se obtuvo de la salida es:
 
-```text
-PASS  src/middlewares/logger.test.ts
-PASS  src/middlewares/auth.test.ts
+> api-aurora@1.0.0 test
+> jest
+
+ PASS  src/auth.test.ts
+ PASS  src/logger.test.ts
 
 Test Suites: 2 passed, 2 total
 Tests:       5 passed, 5 total
 Snapshots:   0 total
-Time:        0.891 s
+Time:        0.198 s, estimated 1 s
 Ran all test suites.
-```
 
-### Casos probados
+Estas pruebas que se ejecutaron nos permiten analizar que el middleware logger es el que registra el método y la ruta de forma efectiva, e invoca next(). También, el middleware de API key devuelve con 401 cunado el header no existe o la clave no es correcta. En cambio, cuando la clave es válida permite el acceso. 
 
-#### Middleware Logger
+# PE-2.2 Documentación y versionado de API
 
-* Verifica que se invoque `next()`.
-* Verifica que registre correctamente el método y la ruta de la petición.
+## Endpoint
 
-#### Middleware API Key
+Este endpoint permite registrar la matrícula de un estudiante indicando sus materias, período académico y método de pago.
+Los datos de entrada son:
 
-* Header `x-api-key` ausente → respuesta HTTP 401.
-* API Key incorrecta → respuesta HTTP 401.
-* API Key válida (`secreto-demo`) → invoca `next()` sin generar respuesta.
+x-api-key: secreto-demo
+
+Body JSON:
+
+{
+  "estudianteID": "12345",
+  "materias": ["Programación", "Bases de Datos"],
+  "periodoID": "2026-1",
+  "metodo_pago": "Efectivo"
+}
+
+Respuesta que se recibio exitosamente es: (201 Created)
+
+{
+  "version": "v1",
+  "message": {
+    "estudianteID": "12345",
+    "materias": ["Programación", "Bases de Datos"],
+    "periodoID": "2026-1",
+    "metodo_pago": "Efectivo"
+  }
+}
+Los errores:
+Error 400 Bad Request
+
+Y cuando falta algunos campos obligatorios:
+
+{
+  "error": "Campos requeridos: estudianteID, materias, periodoID"
+}
+Error 400 Bad Request
+
+
+{
+  "error": "El método de pago insertado debe ser: efectivo, debito credito y tarjeta"
+}
