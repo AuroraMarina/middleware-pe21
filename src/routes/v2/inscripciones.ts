@@ -1,42 +1,51 @@
-import {Request, Response, Router} from 'express';
+import { Request, Response, Router } from 'express';
 
-// public router = 
-    
 const router = Router();
 
-const METODO_PAGO = ['Efectivo', 'Transferencia', 'Débito', 'Crédito']
+const METODO_PAGO = [
+    'Efectivo',
+    'Transferencia',
+    'Débito',
+    'Crédito'
+];
 
-// Post: estudianteID, materias (Arreglo), periodoID metodo pago - registrar matrículo
-router.post('/', (req: Request, res: Response, next) =>{
-    // const body = req.body;
-    const {estudianteID, materias, periodoID, metodo_pago} = req.body;
-    if(!estudianteID || !materias.length || !periodoID || !metodo_pago) {
-        console.error('No existe el id del estudiante')
-        res.status(400).json(
-            {
-                error: 'Campos requeridos: estudianteID. materias, periodoID'
-            }
+router.post('/', (req: Request, res: Response) => {
+    const {
+        estudianteID,
+        materias,
+        periodoID,
+        metodo_pago
+    } = req.body;
 
-        
-        )
-    if(!METODO_PAGO.includes(metodo_pago)){
-        console.log('El método de pago insertado no es válido');
-        res.status(400).json({
-            error: 'El método de pago insertado debe ser: efectivo, debito credito y tarjeta'
-        })
+    if (
+        !estudianteID ||
+        !Array.isArray(materias) ||
+        materias.length === 0 ||
+        !periodoID ||
+        !metodo_pago
+    ) {
+        return res.status(400).json({
+            error:
+                'Campos requeridos: estudianteID, materias, periodoID, metodo_pago'
+        });
     }
-    
+
+    if (!METODO_PAGO.includes(metodo_pago)) {
+        return res.status(400).json({
+            error:
+                'El método de pago debe ser: Efectivo, Transferencia, Débito o Crédito'
+        });
     }
 
-    res.status(201).json({
-        version: 'v1',
+    return res.status(201).json({
+        version: 'v2',
         message: {
-            estudianteID, materias, periodoID, metodo_pago
+            estudianteID,
+            materias,
+            periodoID,
+            metodo_pago
         }
-
-    })
-    
-
-})
+    });
+});
 
 export default router;

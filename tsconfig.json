@@ -1,25 +1,16 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "moduleResolution": "node",
-
-    "ignoreDeprecations": "6.0",
-
     "target": "ES2022",
-    "types": ["node", "jest"],
-
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
-
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "strict": true,
-    "jsx": "react-jsx",
-    "isolatedModules": true,
-    "noUncheckedSideEffectImports": true,
-    "moduleDetection": "force",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "types": [
+      "node",
+      "jest"
+    ],
+    "sourceMap": true,
     "skipLibCheck": true
   }
 }
