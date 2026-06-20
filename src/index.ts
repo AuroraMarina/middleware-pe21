@@ -1,6 +1,6 @@
 import express, { type Request, type Response, type NextFunction } from 'express';
-import { requestLogger } from './middlewares/logger.js';
-import { requireApiKey } from './middlewares/auth.js';
+import { requestLogger } from './logger.js';
+import { requireApiKey } from './auth.js';
 
 import v1Inscripciones from './routes/v1/inscripciones.js';
 import v2Inscripciones from './routes/v2/inscripciones.js';
