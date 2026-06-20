@@ -11,6 +11,12 @@ servers:
     description: "Servidor local"
 
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      
   schemas:
 
     InscripcionRequest:
@@ -71,3 +77,62 @@ components:
       properties:
         error:
           type: string
+
+paths:
+  /v2/inscripciones:
+    post:
+      operationId: crearInscripcionV2
+      summary: Registrar matrícula de estudiante
+
+      security:
+        - ApiKeyAuth: []
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InscripcionRequest'
+
+            examples:
+              exito:
+                value:
+                  estudianteID: "12345"
+                  materias:
+                    - "Programacion"
+                    - "Bases de Datos"
+                  periodoID: "2026-1"
+                  metodo_pago: "Efectivo"
+
+      responses:
+        '201':
+          description: Matrícula registrada correctamente
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InscripcionSuccess'
+
+              example:
+                version: "v1"
+                message:
+                  estudianteID: "12345"
+                  materias:
+                    - "Programacion"
+                    - "Bases de Datos"
+                  periodoID: "2026-1"
+                  metodo_pago: "Efectivo"
+
+        '400':
+          description: Error de validación
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+              example:
+                error: "El método de pago insertado debe ser: efectivo, debito credito y tarjeta"
+
+        '401':
+          description: API Key inválida o ausente
