@@ -229,3 +229,22 @@ Agregar un nuevo campo opcional llamado correo en la solicitud de inscripción s
 ### Cambio que rompe la compatibilidad 
 
 Cambiar el campo metodo_pago para que sea obligatorio cuando antes era opcional sería un cambio incompatible. Tendrían que modificar su implementación para seguir funcionando correctamente.
+
+
+## Evidencias de pruebas
+
+ Escenario 1 - POST /v1/inscripciones (201 Created)
+
+![v1-201](docs/screenshots/01-v1-201.png)
+
+Escenario 2 - POST /v2/inscripciones con método de pago válido (201 Created)
+
+![v2-201](docs/screenshots/02-v2-201.png)
+
+Escenario 3 - POST /v2/inscripciones sin metodo_pago (400 Bad Request)
+
+![v2-400-faltante](docs/screenshots/03-v2-400-faltante.png)
+
+Escenario 4 - POST /v2/inscripciones con metodo_pago inválido (400 Bad Request)
+
+![v2-400-invalido](docs/screenshots/04-v2-400-invalido.png)
