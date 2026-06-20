@@ -103,3 +103,13 @@ Error 400 Bad Request
 {
   "error": "El método de pago insertado debe ser: efectivo, debito credito y tarjeta"
 }
+
+## Versionado
+
+### Cambio compatible con las versiones 
+
+Agregar un nuevo campo opcional llamado correo en la solicitud de inscripción sería un cambio compatible. 
+
+### Cambio que rompe la compatibilidad 
+
+Cambiar el campo metodo_pago para que sea obligatorio cuando antes era opcional sería un cambio incompatible. Tendrían que modificar su implementación para seguir funcionando correctamente.
