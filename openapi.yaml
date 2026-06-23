@@ -1,14 +1,15 @@
 openapi: "3.1.0"
+
 info:
   title: "UIDE Inscripciones API"
   version: "2.0.0"
-  license: 
+  license:
     name: "MIT"
     identifier: "MIT"
 
 servers:
-  - url: http://localhost:3000
-    description: "Servidor local"
+  - url: https://api-uide.com
+    description: "Servidor principal"
 
 components:
   securitySchemes:
@@ -16,8 +17,16 @@ components:
       type: apiKey
       in: header
       name: x-api-key
-      
+
   schemas:
+
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        ts:
+          type: string
 
     InscripcionRequest:
       type: object
@@ -26,6 +35,7 @@ components:
         - materias
         - periodoID
         - metodo_pago
+
       properties:
         estudianteID:
           type: string
@@ -74,25 +84,106 @@ components:
       type: object
       required:
         - error
+
       properties:
         error:
           type: string
 
-paths:
-  /v2/inscripciones:
-    post:
-      operationId: crearInscripcionV2
-      summary: Registrar matrícula de estudiante
+security:
+  - ApiKeyAuth: []
 
-      security:
-        - ApiKeyAuth: []
+paths:
+
+  /health:
+    get:
+      operationId: healthCheck
+      summary: Verificar estado de la API
+
+      responses:
+        "200":
+          description: API funcionando correctamente
+
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+
+              example:
+                status: ok
+                ts: "2026-06-23T10:00:00.000Z"
+
+        "401":
+          description: API Key inválida o ausente
+
+  /v1/inscripciones:
+    post:
+      operationId: crearInscripcionV1
+
+      summary: Registrar matrícula de estudiante versión 1
 
       requestBody:
         required: true
+
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InscripcionRequest'
+              type: object
+
+              required:
+                - estudianteID
+                - materias
+                - periodoID
+
+              properties:
+                estudianteID:
+                  type: string
+
+                materias:
+                  type: array
+                  items:
+                    type: string
+
+                periodoID:
+                  type: string
+
+            example:
+              estudianteID: "12345"
+              materias:
+                - "Programacion"
+                - "Bases de Datos"
+              periodoID: "2026-1"
+
+      responses:
+        "201":
+          description: Matrícula registrada correctamente
+
+        "400":
+          description: Datos inválidos
+
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+              example:
+                error: "Campos requeridos: estudianteID, materias, periodoID"
+
+        "401":
+          description: API Key inválida o ausente
+
+  /v2/inscripciones:
+    post:
+      operationId: crearInscripcionV2
+
+      summary: Registrar matrícula de estudiante versión 2
+
+      requestBody:
+        required: true
+
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InscripcionRequest"
 
             examples:
               exito:
@@ -105,16 +196,16 @@ paths:
                   metodo_pago: "Efectivo"
 
       responses:
-        '201':
+        "201":
           description: Matrícula registrada correctamente
 
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InscripcionSuccess'
+                $ref: "#/components/schemas/InscripcionSuccess"
 
               example:
-                version: "v1"
+                version: "v2"
                 message:
                   estudianteID: "12345"
                   materias:
@@ -123,16 +214,16 @@ paths:
                   periodoID: "2026-1"
                   metodo_pago: "Efectivo"
 
-        '400':
+        "400":
           description: Error de validación
 
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
               example:
-                error: "El método de pago insertado debe ser: efectivo, debito credito y tarjeta"
+                error: "El método de pago debe ser: Efectivo, Transferencia, Débito o Crédito"
 
-        '401':
+        "401":
           description: API Key inválida o ausente
