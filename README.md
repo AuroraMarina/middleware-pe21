@@ -249,6 +249,12 @@ Escenario 4 - POST /v2/inscripciones con metodo_pago inválido (400 Bad Request)
 
 ![v2-400-invalido](docs/screenshots/04-v2-400-invalido.png)
 
+## Evidencia de validación
+
+### Resultado de Redocly CLI
+
+![Lint exitoso](docs/lint-openapi.png)
+
 ## Reflexión
 
 Si en cambio otro equipo empezara a utilizar esta API, el contrato OpenAPI se vería enriquecido cuando menos con ejemplos de todas las peticiones y respuestas, incluidos los errores. También especificaría esquemas reutilizables para cada versión de la API y explicaría con mayor profundidad la autenticación mediante API Key. Estos cambios contribuirían a, por un lado, facilitar la integración de aplicaciones externas, y por el otro, a reducir errores durante el desarrollo e incrementar la comprensión, en términos generales, del funcionamiento de la API.
