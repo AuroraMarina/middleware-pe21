@@ -253,7 +253,7 @@ Escenario 4 - POST /v2/inscripciones con metodo_pago inválido (400 Bad Request)
 
 ### Resultado de Redocly CLI
 
-![Lint exitoso](docs/lint-openapi.png)
+![Lint exitoso](docs/screenshots/lint-openapi.png)
 
 ## Reflexión
 
