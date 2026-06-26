@@ -1,6 +1,7 @@
 import express, { type Request, type Response, type NextFunction } from 'express';
 import { requestLogger } from './logger.js';
-import { requireApiKey } from './auth.js';
+import { requireJwt } from './auth.js';
+import { rateLimiter } from './rateLimiter.js';
 
 import v1Inscripciones from './routes/v1/inscripciones.js';
 import v2Inscripciones from './routes/v2/inscripciones.js';
@@ -17,7 +18,8 @@ app.get('/health', (_req: Request, res: Response) => {
     });
 });
 
-app.use(requireApiKey);
+app.use(requireJwt);
+app.use(rateLimiter);
 
 app.use('/v1/inscripciones', v1Inscripciones);
 app.use('/v2/inscripciones', v2Inscripciones);
