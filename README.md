@@ -258,3 +258,44 @@ Escenario 4 - POST /v2/inscripciones con metodo_pago inválido (400 Bad Request)
 ## Reflexión
 
 Si en cambio otro equipo empezara a utilizar esta API, el contrato OpenAPI se vería enriquecido cuando menos con ejemplos de todas las peticiones y respuestas, incluidos los errores. También especificaría esquemas reutilizables para cada versión de la API y explicaría con mayor profundidad la autenticación mediante API Key. Estos cambios contribuirían a, por un lado, facilitar la integración de aplicaciones externas, y por el otro, a reducir errores durante el desarrollo e incrementar la comprensión, en términos generales, del funcionamiento de la API.
+
+
+# PE-2.3 Seguridad JWT
+
+## Generación del token
+
+Para generar un token JWT se utilizó este comando:
+
+node generate-token.mjs
+
+## Ejecución del servidor
+
+Para iniciar el servidor se ejecutó:
+
+npm run dev
+
+## Evidencias de pruebas
+
+### Escenario 1 = token válido 201 Created
+
+Se envió un token JWT válido y la API respondió correctamente con 201 Created.
+
+![201 Created](docs/screenshots/05-jwt-201.png)
+
+### Escenario 2 = token con firma inválida 401 Unauthorized
+
+Se envió un token con una firma alterada y el middleware respondió con 401 Unauthorized.
+
+![401 Firma inválida](docs/screenshots/06-jwt-401-firma.png)
+
+### Escenario 3 = token con algoritmo none 401 Unauthorized
+
+Se envió un token con alg:none y el middleware respondió con 401 Unauthorized, así rechazo la petición.
+
+![401 Algoritmo no permitido](docs/screenshots/07-jwt-401-none.png)
+
+### Escenario 4 = rate Limiter 429 Too Many Requests
+
+Después de superar el límite de solicitudes permitido, el servidor respondió con 429 Too Many Requests.
+
+![429 Too Many Requests](docs/screenshots/08-rate-limit-429.png)
